@@ -1,20 +1,29 @@
 function showLoader() {
-  $(".loading").fadeIn(1000);
+  $(".loading").fadeIn(500);
   $("body").addClass("no-scroll"); // يمنع التمرير
 }
 
 function hideLoader() {
-  $(".loading").fadeOut(1000);
+  $(".loading").fadeOut(300);
   $("body").removeClass("no-scroll"); // يرجّع التمرير
 }
 async function getMeals() {
-  showLoader();
+try{
+    showLoader();
   const response = await fetch(
     "https://www.themealdb.com/api/json/v1/1/search.php?s="
   );
   const data = await response.json();
-  displayMeals(data.meals);
+   displayMeals(data.meals);
+}
+catch(error){
+console.log(error)
+}
+finally
+{
   hideLoader();
+
+}
 }
 
 function displayMeals(meals) {
@@ -44,7 +53,8 @@ getMeals();
 $(document).on("click", ".meal-link", async function (e) {
   e.preventDefault();
   const mealId = $(this).data("idmeal");
-  showLoader();
+try{
+    showLoader();
   const response = await fetch(
     `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`
   );
@@ -53,9 +63,17 @@ $(document).on("click", ".meal-link", async function (e) {
     const meal = data.meals[0];
     console.log(meal);
     displayMealDetails(meal);
+}
+}
+catch(error){
+console.log(error)
+} finally{
+    hideLoader();
+
+}
     hideLoader();
   }
-});
+);
 
 function displayMealDetails(meal) {
   const container = $(".jscontainer");
@@ -114,18 +132,28 @@ function displayMealDetails(meal) {
 
 $("#showCategories").on("click", async function (e) {
   e.preventDefault();
-  showLoader();
+ try{
+   showLoader();
   const response = await fetch(
     "https://www.themealdb.com/api/json/v1/1/categories.php"
   );
   const data = await response.json();
   console.log(data);
   displayCategories(data.categories);
-  hideLoader();
+ }
+ catch(error){
+  console.log(error)
+ }
+ finally{
+    hideLoader();
+ }
 });
 function displayCategories(categories) {
   const container = $(".jscontainer");
+const container1 = $(".meal-details");
+
   container.empty();
+  container1.empty();
 
   const html = categories
     .map(
@@ -160,7 +188,8 @@ $(document).on("click", ".category-item", async function (e) {
   e.preventDefault(); // علشان الـ <a> ميعملش reload للصفحة
 
   const categoryName = $(this).data("category");
-  showLoader();
+try{
+    showLoader();
   const response = await fetch(
     `https://www.themealdb.com/api/json/v1/1/filter.php?c=${categoryName}`
   );
@@ -169,28 +198,38 @@ $(document).on("click", ".category-item", async function (e) {
   if (data.meals) {
     displayMeals(data.meals); // دي فانكشن الكروت بتاعة الوجبات
   }
-  hideLoader();
-});
+}
+catch(error){
+console.log(error)
+}
+finally{
+    hideLoader();
+}});
 
 $("#showArea").on("click", async function (e) {
   e.preventDefault();
-
-  // اقفل السايدبار
-
-  // تحميل البيانات
-  showLoader();
+try{
+    showLoader();
   const response = await fetch(
     "https://www.themealdb.com/api/json/v1/1/list.php?a=list"
   );
   const data = await response.json();
   console.log(data);
   displayAreas(data.meals);
+}
+catch(error){
+console.log(error);
+
+}finally{
   hideLoader();
+}
 });
 
 function displayAreas(areas) {
   const container = $(".jscontainer");
+  const container1 = $(".meal-details");
   container.empty();
+  container1.empty();
 
   const html = areas
     .map(
@@ -213,7 +252,8 @@ function displayAreas(areas) {
 }
 $(document).on("click", ".area-item", async function (e) {
   e.preventDefault();
-  showLoader();
+try{
+    showLoader();
   const areaName = $(this).find(".card").data("area");
 
   const response = await fetch(
@@ -224,24 +264,39 @@ $(document).on("click", ".area-item", async function (e) {
   if (data.meals) {
     displayMeals(data.meals); // نفس الفانكشن اللي بتعرض كروت الوجبات
   }
-  hideLoader();
+}
+catch(error){
+console.log(error);
+}
+finally{
+    hideLoader();
+}
 });
 
 $("#showIngredients").on("click", async function (e) {
   e.preventDefault();
-  showLoader();
+ try{
+   showLoader();
   const response = await fetch(
     "https://www.themealdb.com/api/json/v1/1/list.php?i=list"
   );
   const data = await response.json();
   console.log(data);
   displayIngredients(data.meals);
-  hideLoader();
+ }
+ catch(error){
+console.log(error);
+
+ }finally{
+    hideLoader();
+ }
 });
 
 function displayIngredients(Ingredients) {
   const container = $(".jscontainer");
+  const container1 = $(".meal-details");
   container.empty();
+  container1.empty();
 
   const html = Ingredients.map((Ingredient) => {
     if (!Ingredient.strDescription || Ingredient.strDescription.trim() === "") {
@@ -267,7 +322,8 @@ function displayIngredients(Ingredients) {
 }
 $(document).on("click", ".ingredient-item", async function (e) {
   e.preventDefault();
-  showLoader();
+try{
+    showLoader();
   const ingredient = $(this).find(".card").data("ingredient");
 
   const response = await fetch(
@@ -278,7 +334,13 @@ $(document).on("click", ".ingredient-item", async function (e) {
   if (data.meals) {
     displayMeals(data.meals); // يعرض الوجبات اللي فيها المكون ده
   }
-  hideLoader();
+}
+catch(error){
+console.log(error);
+
+}finally{
+ hideLoader();
+}
 });
 
 $("#showSearch").on("click", function (e) {
@@ -313,39 +375,57 @@ $("#showSearch").on("click", function (e) {
       $(".jscontainer").empty();
     }
   });
-  $(document).on("input", "#searchByFirstLetter", async function () {
-    const firstLetter = $(this).val().trim().toLowerCase();
+$(document).on("input", "#searchByFirstLetter", async function () {
+  let firstLetter = $(this).val().trim().toLowerCase();
 
-    if (firstLetter.length === 1 && /^[a-zA-Z]$/.test(firstLetter)) {
-      const response = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/search.php?f=${firstLetter}`
-      );
-      const data = await response.json();
+  // خليه حرف واحد بس
+  if (firstLetter.length > 1) {
+    firstLetter = firstLetter.charAt(0);
+    $(this).val(firstLetter); // نرجع القيمة للحرف الأول فقط
+  }
 
-      if (data.meals) {
-        $(".jscontainer").empty();
-        displayMeals(data.meals);
-      } else {
-        $(".jscontainer")
-          .empty()
-          .append("<p class='text-white'>لا توجد نتائج.</p>");
-      }
+  // تحقق إنه حرف إنجليزي فقط
+  if (firstLetter.length === 1 && /^[a-zA-Z]$/.test(firstLetter)) {
+ try{
+     showLoader();
+    const response = await fetch(
+`      https://www.themealdb.com/api/json/v1/1/search.php?f=${firstLetter}
+`    );
+    const data = await response.json();
+
+    $(".jscontainer").empty();
+
+    if (data.meals) {
+      displayMeals(data.meals);
     } else {
-      $(".jscontainer").empty();
+      $(".jscontainer").html("<p class='text-white'>لا توجد نتائج.</p>");
     }
-  });
+ }catch(error){
+console.log(error);
+
+ }
+finally{
+      hideLoader();
+}
+  } else {
+    $(".jscontainer").empty();
+  }
+});
 });
 
 function displaysearch() {
   const container1 = $("#searchbox");
+    const container2 = $(".meal-details");
+
   container1.empty();
+  container2.empty();
 
   const html = `
   <div class=" col-md-6 col-sm-12 mb-2">
         <input type="text" id="searchByName" class="form-control mb-2 w-100" placeholder="Search By Name">
     </div>
     <div class=" col-md-6 col-sm-12 ">
-          <input type="text" id="searchByFirstLetter" class="form-control mb-2 w-100 " placeholder="Search By First Letter">
+          <input type="text" id="searchByFirstLetter" class="form-control mb-2 w-100" placeholder="Search By First Letter">
     </div>
   
   `;
