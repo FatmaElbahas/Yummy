@@ -345,7 +345,7 @@ function displaysearch() {
         <input type="text" id="searchByName" class="form-control mb-2 w-100" placeholder="Search By Name">
     </div>
     <div class=" col-md-6 col-sm-12 ">
-          <input type="text" id="searchByFirstLetter" class="form-control mb-2 w-100 px-5" placeholder="Search By First Letter">
+          <input type="text" id="searchByFirstLetter" class="form-control mb-2 w-100 " placeholder="Search By First Letter">
     </div>
   
   `;
