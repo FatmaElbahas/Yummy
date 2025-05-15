@@ -3,6 +3,7 @@ i {
 }
 body.no-scroll {
   overflow: hidden;
+    box-sizing: border-box;
 }
 a {
   text-decoration: none;
